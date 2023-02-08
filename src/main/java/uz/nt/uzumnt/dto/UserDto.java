@@ -18,4 +18,6 @@ public class UserDto {
     private String gender;
     private String email;
     private Date birthDate;
+    private Short isActive;
+
 }

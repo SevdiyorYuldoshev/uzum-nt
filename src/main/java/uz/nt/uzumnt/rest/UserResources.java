@@ -32,4 +32,9 @@ public class UserResources {
     public ResponseDto<UserDto> getByPhoneNumber(@RequestParam String phone){
         return userService.getByPhone(phone);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseDto<UserDto> delete(@PathVariable Integer id){
+        return userService.deleteByPhone(id);
+    }
 }

@@ -1,6 +1,7 @@
 package uz.nt.uzumnt.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import uz.nt.uzumnt.dto.ResponseDto;
 import uz.nt.uzumnt.dto.UserDto;
@@ -17,6 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public ResponseDto<UserDto> add(UserDto userDto) {
+        userDto.setIsActive((short) 1);
         Users users = UserMapper.getEntity(userDto);
 
         userRepository.save(users);
@@ -49,6 +51,14 @@ public class UserService {
         }
 
         Users user = userOptional.get();
+
+        if(user.getIsActive() == 0){
+            return ResponseDto.<UserDto>builder()
+                    .data(userDto)
+                    .code(-1)
+                    .message("ID "+ userDto.getId()+" not found")
+                    .build();
+        }
         user.setId(userDto.getId());
 
         if(userDto.getGender() != null){
@@ -89,9 +99,10 @@ public class UserService {
         return userRepository.findFirstByPhoneNumber(phone)
                 .map(s ->
                     ResponseDto.<UserDto>builder()
-                            .success(true)
-                            .message("OK")
-                            .data(UserMapper.getUserDto(s))
+                            .success(s.getIsActive() == 1)
+                            .code(s.getIsActive() == 1 ? 0 : -1)
+                            .message(s.getIsActive() == 1 ? "OK" : "Not found")
+                            .data(s.getIsActive() == 1 ? UserMapper.getUserDto(s) : null)
                             .build()
                 ).orElse(
                         ResponseDto.<UserDto>builder()
@@ -99,5 +110,36 @@ public class UserService {
                                 .code(-1)
                                 .build()
                 );
+    }
+
+    public ResponseDto<UserDto> deleteByPhone(Integer id) {
+        Optional<Users> usersOptional = userRepository.findById(id);
+
+        if(usersOptional.isEmpty()){
+            return ResponseDto.<UserDto>builder()
+                    .code(-1)
+                    .message("Not found")
+                    .build();
+        }
+
+        Users user = usersOptional.get();
+
+        if(user.getIsActive() == 0){
+            return ResponseDto.<UserDto>builder()
+                    .message("This ID not active")
+                    .code(2)
+                    .build();
+        }
+
+        user.setIsActive((short) 0);
+
+        userRepository.save(user);
+
+        return ResponseDto.<UserDto>builder()
+                .message("OK")
+                .success(true)
+                .data(UserMapper.getUserDto(user))
+                .build();
+
     }
 }
