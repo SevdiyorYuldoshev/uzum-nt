@@ -1,7 +1,9 @@
 package uz.nt.uzumnt.model;
 
+import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -16,6 +18,8 @@ import java.util.Date;
 public class Users {
 
     @Id
+    @Generated("seq_id")
+    @SequenceGenerator(name = "seq_id", sequenceName = "seq_ID", allocationSize = 1)
     private Integer id;
     private String firstName;
     private String lastName;

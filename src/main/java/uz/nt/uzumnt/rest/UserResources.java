@@ -22,4 +22,14 @@ public class UserResources {
     public ResponseDto<UserDto> addUser(@RequestBody UserDto userDto){
         return userService.add(userDto);
     }
+
+    @PatchMapping
+    public ResponseDto<UserDto> update(@RequestBody UserDto userDto){
+        return userService.updateUser(userDto);
+    }
+
+    @GetMapping("get-by-phone")
+    public ResponseDto<UserDto> getByPhoneNumber(@RequestParam String phone){
+        return userService.getByPhone(phone);
+    }
 }
