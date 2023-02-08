@@ -25,5 +25,5 @@ public class Users {
     private String gender;
     private String email;
     private Date birthDate;
-    private Short isActive;
+    private Short isActive = 1;
 }

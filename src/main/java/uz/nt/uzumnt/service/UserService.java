@@ -17,7 +17,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public ResponseDto<UserDto> add(UserDto userDto) {
-        userDto.setIsActive((short) 1);
         Users users = UserMapper.getEntity(userDto);
 
         userRepository.save(users);
@@ -83,25 +82,32 @@ public class UserService {
         }
 
 
+        try{
+            userRepository.save(user);
 
-        userRepository.save(user);
+            return ResponseDto.<UserDto>builder()
+                    .message("OK")
+                    .data(UserMapper.getUserDto(user))
+                    .success(true)
+                    .build();
+        }catch (Exception e){
+            return ResponseDto.<UserDto>builder()
+                    .message("Error while saving user: " +e.getMessage())
+                    .code(1)
+                    .data(UserMapper.getUserDto(user))
+                    .build();
+        }
 
-        return ResponseDto.<UserDto>builder()
-                .message("OK")
-                .data(UserMapper.getUserDto(user))
-                .success(true)
-                .build();
     }
 
 
     public ResponseDto<UserDto> getByPhone(String phone) {
-        return userRepository.findFirstByPhoneNumber(phone)
+        return userRepository.findFirstByPhoneNumberAndIsActive(phone, (short) 1)
                 .map(s ->
                     ResponseDto.<UserDto>builder()
-                            .success(s.getIsActive() == 1)
-                            .code(s.getIsActive() == 1 ? 0 : -1)
-                            .message(s.getIsActive() == 1 ? "OK" : "Not found")
-                            .data(s.getIsActive() == 1 ? UserMapper.getUserDto(s) : null)
+                            .success(true)
+                            .message("OK")
+                            .data(UserMapper.getUserDto(s))
                             .build()
                 ).orElse(
                         ResponseDto.<UserDto>builder()

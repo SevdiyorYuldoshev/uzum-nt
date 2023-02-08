@@ -15,7 +15,6 @@ public class UserMapper {
         userDto.setBirthDate(entity.getBirthDate());
         userDto.setMiddleName(entity.getMiddleName());
         userDto.setPhoneNumber(entity.getPhoneNumber());
-        userDto.setIsActive(entity.getIsActive());
 
         return userDto;
     }
@@ -30,7 +29,6 @@ public class UserMapper {
         entity.setFirstName(userDto.getFirstName());
         entity.setMiddleName(userDto.getMiddleName());
         entity.setPhoneNumber(userDto.getPhoneNumber());
-        entity.setIsActive(userDto.getIsActive());
 
         return entity;
     }
