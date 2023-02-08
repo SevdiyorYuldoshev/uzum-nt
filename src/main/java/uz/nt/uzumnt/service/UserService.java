@@ -1,7 +1,6 @@
 package uz.nt.uzumnt.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import uz.nt.uzumnt.dto.ResponseDto;
 import uz.nt.uzumnt.dto.UserDto;
